@@ -32,8 +32,11 @@ const Signin = () => {
 
       console.log(result.data)
     } catch (error) {
-      console.log(error)
-      
+        if (error.response && error.response.data.message) {
+      alert(error.response.data.message)
+    } else {
+      alert("Something went wrong")
+    }
     }
   }
   return (
@@ -68,7 +71,7 @@ const Signin = () => {
               setShowPassword(prev => !prev)
             }}>{!showPassword ? <FaEye /> : <FaEyeSlash />}</button>
             <div className='text-right mb-4 text-[#ff4d2d] font-medium cursor-pointer' onClick={()=>
-              navigate("forgot-password")
+              navigate("/forgot-password")
             }>Forgot Password</div>
           </div>
         </div>
@@ -82,7 +85,7 @@ const Signin = () => {
           <FcGoogle size={20} />
           <span>Sign In With Google</span>
         </button>
-        <p className='text-center mt-6 cursor-pointer' onClick={()=>navigate("/signin")}>Don't  have an account ? <span className='text-[#ff4d2d]'>Sign-up</span></p>
+        <p className='text-center mt-6 cursor-pointer' onClick={()=>navigate("/signup")}>Don't  have an account ? <span className='text-[#ff4d2d]'>Sign-up</span></p>
          
       </div>
      
