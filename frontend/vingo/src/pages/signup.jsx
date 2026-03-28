@@ -5,6 +5,8 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { serverUrl } from '../App';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase';
 const Signup = () => {
   const primaryColor = "#ff4d2d";
   const hoverColor = "#e64323";
@@ -39,6 +41,15 @@ const Signup = () => {
       console.log(error)
       
     }
+  }
+
+  const handleGoogleAuth=async()=>{
+    if(!mobileNumber){
+      return alert("Mobile Number is Required")
+    }
+    const provider=new GoogleAuthProvider()
+    const result=await signInWithPopup(auth,provider)
+    console.log(result)
   }
   return (
     <div className='min-h-screen w-full flex items-center justify-center  p-4 ' style=
@@ -115,7 +126,7 @@ const Signup = () => {
 
         <button className='w-full mt-4 flex items-center justify-center gap-2 border
         rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-200 cursor-pointer
-        '>
+        ' onClick={handleGoogleAuth}>
           <FcGoogle size={20} />
           <span>Sign Up With Google</span>
         </button>
