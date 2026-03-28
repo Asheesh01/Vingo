@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
 
     res.cookie("token", token, {
       secure: false,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true
     });
@@ -59,7 +59,7 @@ export const signin = async (req, res) => {
     const token = await genToken(user._id)
     res.cookie("token", token, {
       secure: false,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true
     })
@@ -136,25 +136,26 @@ export const resetPassword=async(req,res)=>{
 
 export const  googleAuth=async(req,res)=>{
   try {
-    const {fullName,email,mobile}=req.body
-    const user=await User.findOne({email})
+    const {fullName,email,mobile,role}=req.body
+    let user=await User.findOne({email})
     if(!user){
-      user=await user.create({
-        fullName,email,mobile
+        user=await User.create({
+        fullName,email,mobile,role
       })
     }
+   
     const token = await genToken(user._id)
     res.cookie("token", token, {
       secure: false,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true
     })
     return res.status(200).json({ user })
   }
    catch (error) {
-     return res.status(500).json(`Reset Password  error ${error}`)
-
+ console.log("ERROR:", error); 
+    return res.status(500).json({ message: error.message });
   }
 
 }

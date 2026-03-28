@@ -3,47 +3,62 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { serverUrl } from '../App';
+import { ClipLoader } from 'react-spinners';
 const ForgotPassword = () => {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [email, setEmail] = useState("")
   const [otp, setOtp] = useState("")
-  const[newPassword,setNewPassword]=useState("")
-  const[confirmPassword,setConfirmPassword]=useState("")
-  const handleSendOtp=async()=>{
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [err, setErr] = useState("")
+  const [loading, setLoading] = useState(false)
+  const handleSendOtp = async () => {
+    setLoading(true)
     try {
-      const result=await axios.post(`${serverUrl}/api/auth/sendotp`,{email},{withCredentials:true})
+      const result = await axios.post(`${serverUrl}/api/auth/sendotp`, { email }, { withCredentials: true })
       console.log(result)
       setStep(2)
+      setErr("")
+      setLoading(false)
     } catch (error) {
-      console.log(error)
+      setErr(error?.response?.data?.message)
+      setLoading(false)
     }
   }
 
-  const verifyOtp=async()=>{
+  const verifyOtp = async () => {
+    setLoading(true)
     try {
-      const result=await axios.post(`${serverUrl}/api/auth/verifyotp`,{email,otp},{withCredentials:true})
+      const result = await axios.post(`${serverUrl}/api/auth/verifyotp`, { email, otp }, { withCredentials: true })
       console.log(result)
+      setErr("")
       setStep(3)
+      setLoading(false)
     } catch (error) {
-      console.log(error)
+      setErr(error?.response?.data?.message)
+      setLoading(false)
     }
   }
 
-  const handleResetPassword=async()=>{
-    if(newPassword!=confirmPassword){
+  const handleResetPassword = async () => {
+    setLoading(true)
+    if (newPassword != confirmPassword) {
       return null
     }
     try {
-      const result=await axios.post(`${serverUrl}/api/auth/resetpassword`,{email,newPassword},{withCredentials:true})
+      const result = await axios.post(`${serverUrl}/api/auth/resetpassword`, { email, newPassword }, { withCredentials: true })
       console.log(result)
+      setErr("")
       navigate("/signin")
+      setLoading(false)
     } catch (error) {
-      console.log(error)
+      setErr(error?.response?.data?.message)
+      setLoading(false)
     }
   }
 
-  
+
   return (
     <div className='flex items-center justify-center w-full min-h-screen p-4 bg-[#fff9f6]'>
       <div className='bg-white rounded-xl shadow-lg w-full max-w-md p-8'>
@@ -61,9 +76,10 @@ const ForgotPassword = () => {
                 setEmail(e.target.value)}
               value={email} />
             <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 cursor-pointer
-         bg-[#ff4d2d] text-white hover:bg-[#e64323]`} onClick={handleSendOtp}>
-              Send Otp</button>
-
+         bg-[#ff4d2d] text-white hover:bg-[#e64323]`} onClick={handleSendOtp} disabled={loading}>
+              {loading ? <ClipLoader size={20} color='white' /> : "  Send Otp"}
+            </button>
+            {err && <p className='text-red-500 text-center my-[10px]'>*{err}</p>}
           </div>}
         {step == 2
           &&
@@ -74,8 +90,10 @@ const ForgotPassword = () => {
                 setOtp(e.target.value)}
               value={otp} />
             <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 cursor-pointer
-         bg-[#ff4d2d] text-white hover:bg-[#e64323]`} onClick={verifyOtp}>
-              Verify Otp</button>
+         bg-[#ff4d2d] text-white hover:bg-[#e64323]`} onClick={verifyOtp} disabled={loading} >
+              {loading ? <ClipLoader size={20} color='white' /> : " Verify Otp"}
+            </button>
+            {err && <p className='text-red-500 text-center my-[10px]'>*{err}</p>}
           </div>
         }
         {step == 3
@@ -95,8 +113,11 @@ const ForgotPassword = () => {
                   setConfirmPassword(e.target.value)}
                 value={confirmPassword} />
               <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 cursor-pointer
-         bg-[#ff4d2d] text-white hover:bg-[#e64323]`} onClick={handleResetPassword}>
-                Reset Password</button>
+         bg-[#ff4d2d] text-white hover:bg-[#e64323]`} onClick={handleResetPassword} disabled={loading}>
+                {loading ? <ClipLoader size={20} color='white' /> : "  Reset Password"}
+              </button>
+              {err && <p className='text-red-500 text-center my-[10px]'>*{err}</p>}
+
             </div>
           </div>
         }
