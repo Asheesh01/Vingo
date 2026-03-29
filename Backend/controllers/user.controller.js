@@ -5,13 +5,13 @@ export const getCurrentUser=async(req,res)=>{
     try {
         const userId=req.userId
         if(!userId){
-            return resizeTo.status(400).json({message:"userId is not FOund"})
+            return res  .status(400).json({message:"userId is not FOund"})
         }
         const user=await User.findById(userId)
         if(!user){
             return res.status(400).json({message:"user is not Found"})
         }
-        response.status(200).json(user)
+        res.status(200).json(user)
     } catch (error) {
          return res.status(400).json({message:`get currenr user${error}`})
     }

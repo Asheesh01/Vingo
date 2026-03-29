@@ -35,7 +35,8 @@ export const signup = async (req, res) => {
       secure: false,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true
+      httpOnly: true,
+       path: "/"
     });
 
     return res.status(201).json({ user });
@@ -61,7 +62,8 @@ export const signin = async (req, res) => {
       secure: false,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true
+      httpOnly: true,
+       path: "/"
     })
     return res.status(200).json({ user })
   }
@@ -149,7 +151,8 @@ export const  googleAuth=async(req,res)=>{
       secure: false,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true
+      httpOnly: true,
+       path: "/"
     })
     return res.status(200).json({ user })
   }
